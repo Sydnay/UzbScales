@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		
+		xmlns:vm="using:AvaloniaApplication2.ViewModels"
+		
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="AvaloniaApplication2.Views.PrintReceipt">
+
+	<Design.DataContext>
+		<vm:PrintReceiptViewModel/>
+	</Design.DataContext>
+	<Grid>
+		<StackPanel>
+			<TextBlock Text="{Binding Sticker.Price, StringFormat=Цена/кг: {0}}"/>
+			<TextBlock Text="{Binding Sticker.Weight, StringFormat=Вес/кг: {0}}"/>
+			<TextBlock Text="{Binding Sticker.SumTotal, StringFormat=ОБЩАЯ СУММА: {0}}"/>
+			<TextBlock Text="{Binding Sticker.Name, StringFormat=Товар: {0}}"/>
+			<TextBlock Text="{Binding Sticker.Barcode, StringFormat=Штрих-код: {0}}"/>
+		</StackPanel>
+	</Grid>
+	
+</Window>
