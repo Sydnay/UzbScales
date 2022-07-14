@@ -1,6 +1,5 @@
-using Avalonia.Media.Imaging;
-using AvaloniaApplication2.Models;
 using AvaloniaApplication2.Views;
+using BL;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -9,29 +8,26 @@ using System.Data.Entity;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Reactive;
-using System.Reactive.Linq;
-using System.Text;
-using System.Windows.Input;
 
 namespace AvaloniaApplication2.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
-    {
-        GoodsContext db;
+    public interface IMainWindowViewModel {}
 
-        public IEnumerable<string> Categories { get; set; } = new List<string>() { "ќвощи", "‘рукты", "ћ€со"};
+    public class MainWindowViewModel : ViewModelBase, IMainWindowViewModel
+    {
+        public IEnumerable<string> Categories { get; set; } = new List<string>() { "ќвощи", "‘рукты", "ћ€со" };
         public ObservableCollection<Good> GoodList { get; set; }
 
-        Good _selectedItem;
+        private readonly IGoodsContext _db;
+        private readonly IChosenRecieptViewModel _recieptViewModel;
 
+        private Good _selectedItem;
         public Good SelectedItem
         {
             get => _selectedItem;
             set => Set(ref _selectedItem, value);
         }
-
 
         private decimal _weight = 0;
         public decimal Weight
@@ -39,12 +35,14 @@ namespace AvaloniaApplication2.ViewModels
             get => _weight;
             set => Set(ref _weight, value);
         }
+
         private int _price = 0;
         public int Price
         {
             get => _price;
             set => Set(ref _price, value);
         }
+
         private int _sumTotal = 0;
         public int SumTotal
         {
@@ -55,12 +53,11 @@ namespace AvaloniaApplication2.ViewModels
 
         public ReactiveCommand<Good, Unit> NewWindow { get; }
 
-        void RunTheThing(Good parameter)
+        private void RunTheThing(Good parameter)
         {
-            var window = new ChoosenReceipt()
-            {
-            DataContext = new ChoosenReceiptViewModel(parameter)
-            };
+            var window = new ChoosenReceipt();
+            _recieptViewModel.Setup(parameter);
+            window.DataContext = _recieptViewModel;
             window.Show();
         }
 
@@ -77,19 +74,17 @@ namespace AvaloniaApplication2.ViewModels
         // The command that navigates a user back.
         public ReactiveCommand<Unit, Unit> GoBack => Router.NavigateBack;
 
-        public Interaction<ChoosenReceiptViewModel, MainWindowViewModel?> ShowDialog { get; }
+        public Interaction<ChosenReceiptViewModel, MainWindowViewModel?> ShowDialog { get; }
 
         #endregion
-        public MainWindowViewModel()
+        public MainWindowViewModel(IGoodsContext goodsContext, IChosenRecieptViewModel chosenRecieptViewModel)
         {
             NewWindow = ReactiveCommand.Create<Good>(RunTheThing);
 
-            db = new GoodsContext();
+            _recieptViewModel = chosenRecieptViewModel;
+            _db = goodsContext;
 
-            db.Goods.Load();
-
-
-            foreach (var good in db.Goods)
+            foreach (var good in _db.Goods)
             {
                 if (good.isWeighable)
                     good.Name += ", кг";
@@ -97,8 +92,8 @@ namespace AvaloniaApplication2.ViewModels
                     good.Name += ", шт";
                 good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
             }
-            
-            GoodList = db.Goods.Local;
+
+            GoodList = _db.Goods.Local;
         }
 
         private byte[] ImgToByte64(string path)
@@ -119,7 +114,7 @@ namespace AvaloniaApplication2.ViewModels
 
         private Image Byte64ToImg(byte[] img)
         {
-           
+
             Image image;
             using (MemoryStream ms = new MemoryStream(img))
             {

@@ -1,7 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AvaloniaApplication2.Models
+namespace BL
 {
     public class Good
     {

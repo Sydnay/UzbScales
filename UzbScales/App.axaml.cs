@@ -1,8 +1,11 @@
+using System;
+using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using AvaloniaApplication2.ViewModels;
 using AvaloniaApplication2.Views;
+using Splat;
 
 namespace AvaloniaApplication2
 {
@@ -15,13 +18,20 @@ namespace AvaloniaApplication2
 
         public override void OnFrameworkInitializationCompleted()
         {
-            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            string workingDirectory = Environment.CurrentDirectory;
+            AppDomain.CurrentDomain.SetData("DataDirectory", $"{workingDirectory}\\Base");
+
+            if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime)
             {
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = new MainWindowViewModel(),
-                };
+                base.OnFrameworkInitializationCompleted();
+                return;
             }
+
+            var desktop = ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+            desktop.MainWindow = new MainWindow();
+            AppBootstrapper.Register(Locator.CurrentMutable, Locator.Current);
+            desktop.MainWindow.DataContext = Locator.Current.GetRequiredService<IMainWindowViewModel>();
+            desktop.MainWindow.Show();
 
             base.OnFrameworkInitializationCompleted();
         }

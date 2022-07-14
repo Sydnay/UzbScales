@@ -1,9 +1,7 @@
-﻿using AvaloniaApplication2.Models;
-using AvaloniaApplication2.Models.DTO;
+﻿using AvaloniaApplication2.Models.DTO;
 using AvaloniaApplication2.Views;
+using BL;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Drawing;
@@ -11,34 +9,28 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace AvaloniaApplication2.ViewModels
 {
-    public class ChoosenReceiptViewModel : ViewModelBase
+    public interface IChosenRecieptViewModel
     {
-        GoodsContext db;
-        #region IRoutableViewModel
-        // Reference to IScreen that owns the routable view model.
-        public IScreen HostScreen { get; }
+        public void Setup(Good chosenGood);
+    }
 
-        // Unique identifier for the routable view model.
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
-        public ChoosenReceiptViewModel(IScreen screen) => HostScreen = screen;
-        #endregion
+    public class ChosenReceiptViewModel : ViewModelBase, IChosenRecieptViewModel
+    {
         public ObservableCollection<Good> SimilarGoods { get; set; }
 
-        Good _selectedItem;
+        private readonly IGoodsContext _db;
 
+        private Good _selectedItem;
         public Good SelectedItem
         {
             get => _selectedItem;
             set => Set(ref _selectedItem, value);
         }
-        Good _good;
+
+        private Good _good;
         public Good Good
         {
             get => _good;
@@ -51,18 +43,19 @@ namespace AvaloniaApplication2.ViewModels
             get => _weight;
             set => Set(ref _weight, value);
         }
+
         private int _sumTotal = 0;
         public int SumTotal
         {
             get => _sumTotal;
             set => Set(ref _sumTotal, value);
         }
-        #region Commands
 
+        #region Commands
         public ReactiveCommand<Unit, Unit> AddKiloTEST { get; }
         void AddKilo()
         {
-            Weight = Weight+0.5m;
+            Weight = Weight + 0.5m;
         }
 
         public ReactiveCommand<Good, Unit> OpenSimilarGood { get; }
@@ -82,7 +75,7 @@ namespace AvaloniaApplication2.ViewModels
                 Name = Good.Name,
                 Price = (int)Good.Price,
                 Weight = this.Weight,
-                SumTotal = (int)Weight*Good.Price,
+                SumTotal = (int)Weight * Good.Price,
                 Barcode = Good.SAP
             };
 
@@ -93,16 +86,16 @@ namespace AvaloniaApplication2.ViewModels
             window.Show();
         }
         #endregion
-        public ChoosenReceiptViewModel(Good choosenGood)
+
+        public ChosenReceiptViewModel(IGoodsContext goodsContext)
         {
             OpenSimilarGood = ReactiveCommand.Create<Good>(RunTheThing);
             PrintSticker = ReactiveCommand.Create(PrintStickerCommand);
             AddKiloTEST = ReactiveCommand.Create(AddKilo);
 
-            db = new GoodsContext();
-            db.Goods.Load();
+            _db = goodsContext;
 
-            foreach (var good in db.Goods)
+            foreach (var good in _db.Goods)
             {
                 if (good.isWeighable)
                     good.Name += ", кг";
@@ -110,17 +103,15 @@ namespace AvaloniaApplication2.ViewModels
                     good.Name += ", шт";
                 good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
             }
-
-            Good = choosenGood;
-
-            var collection = new ObservableCollection<Good>(db.Goods.Local.Where(x => x.Id!=choosenGood.Id).Take(4));
-            SimilarGoods = collection;
-
-            
         }
 
+        public void Setup(Good chosenGood)
+        {
+            Good = chosenGood;
 
-
+            var collection = new ObservableCollection<Good>(_db.Goods.Local.Where(x => x.Id != chosenGood.Id).Take(4));
+            SimilarGoods = collection;
+        }
 
         private Image Byte64ToImg(byte[] img)
         {
@@ -130,7 +121,6 @@ namespace AvaloniaApplication2.ViewModels
             {
                 image = Image.FromStream(ms);
             }
-
             return image;
         }
 
