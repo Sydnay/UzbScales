@@ -1,5 +1,7 @@
-﻿using ReactiveUI;
-using System;
+﻿using AvaloniaApplication2.Models.DTO;
+using AvaloniaApplication2.Views;
+using BL;
+using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Drawing;
@@ -7,13 +9,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reactive;
-using UzbScales.Models;
-using UzbScales.Models.DTO;
-using UzbScales.Views;
 
-namespace UzbScales.ViewModels
+namespace AvaloniaApplication2.ViewModels
 {
-    public class ChoosenReceiptViewModel : ViewModelBase
+    public interface IChosenRecieptViewModel
     {
         public void Setup(Good chosenGood);
     }
@@ -24,6 +23,7 @@ namespace UzbScales.ViewModels
 
         private readonly IGoodsContext _db;
 
+        private Good _selectedItem;
         public Good SelectedItem
         {
             get => _selectedItem;
@@ -43,14 +43,15 @@ namespace UzbScales.ViewModels
             get => _weight;
             set => Set(ref _weight, value);
         }
+
         private int _sumTotal = 0;
         public int SumTotal
         {
             get => _sumTotal;
             set => Set(ref _sumTotal, value);
         }
-        #region Commands
 
+        #region Commands
         public ReactiveCommand<Unit, Unit> AddKiloTEST { get; }
         void AddKilo()
         {
@@ -93,9 +94,8 @@ namespace UzbScales.ViewModels
             AddKiloTEST = ReactiveCommand.Create(AddKilo);
 
             _db = goodsContext;
-            _db.Goods.Load();
 
-            foreach (var good in db.Goods)
+            foreach (var good in _db.Goods)
             {
                 if (good.isWeighable)
                     good.Name += ", кг";
@@ -103,6 +103,7 @@ namespace UzbScales.ViewModels
                     good.Name += ", шт";
                 good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
             }
+        }
 
         public void Setup(Good chosenGood)
         {
@@ -120,7 +121,6 @@ namespace UzbScales.ViewModels
             {
                 image = Image.FromStream(ms);
             }
-
             return image;
         }
 

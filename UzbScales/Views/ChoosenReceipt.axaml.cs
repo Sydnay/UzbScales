@@ -9,7 +9,7 @@ using System;
 
 namespace UzbScales.Views
 {
-    public partial class ChoosenReceipt : ReactiveWindow<ChoosenReceiptViewModel>
+    public partial class ChoosenReceipt : ReactiveWindow<ChosenReceiptViewModel>
     {
         public ChoosenReceipt()
         {
