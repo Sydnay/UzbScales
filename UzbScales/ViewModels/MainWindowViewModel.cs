@@ -8,6 +8,7 @@ using System.Data.Entity;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Reactive;
 
 namespace AvaloniaApplication2.ViewModels
@@ -83,6 +84,7 @@ namespace AvaloniaApplication2.ViewModels
 
             _recieptViewModel = chosenRecieptViewModel;
             _db = goodsContext;
+            _db.Goods.Load();
 
             foreach (var good in _db.Goods)
             {
@@ -93,7 +95,7 @@ namespace AvaloniaApplication2.ViewModels
                 good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
             }
 
-            GoodList = _db.Goods.Local;
+            GoodList = new ObservableCollection<Good>(_db.Goods.ToList());
         }
 
         private byte[] ImgToByte64(string path)

@@ -94,6 +94,7 @@ namespace AvaloniaApplication2.ViewModels
             AddKiloTEST = ReactiveCommand.Create(AddKilo);
 
             _db = goodsContext;
+            _db.Goods.Load();
 
             foreach (var good in _db.Goods)
             {

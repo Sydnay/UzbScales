@@ -11,7 +11,7 @@ namespace BL
     {
         public GoodsContext()
         {
-            Goods.Load();
+            
         }
         public DbSet<Good> Goods { get; set; }
 
@@ -19,8 +19,14 @@ namespace BL
         {
             if (!optionsBuilder.IsConfigured)
             {
+                string connection =
+                    System.Configuration.ConfigurationManager.
+                    ConnectionStrings["ScaleConnection"].ConnectionString;
+                optionsBuilder.UseSqlServer(connection);
+                
                 //optionsBuilder.UseMs("Data Source=D:\\\\helloapp.db");
             }
         }
+
     }
 }
