@@ -1,15 +1,12 @@
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
-using Avalonia.ReactiveUI;
-using UzbScales.ViewModels;
 
 namespace UzbScales.Views
 {
-    public partial class PrintReceipt : ReactiveWindow<PrintReceiptViewModel>
+    public partial class PiecePrintReceipt : Window
     {
-        public PrintReceipt()
+        public PiecePrintReceipt()
         {
             InitializeComponent();
         }
@@ -18,6 +15,5 @@ namespace UzbScales.Views
         {
             AvaloniaXamlLoader.Load(this);
         }
-
     }
 }

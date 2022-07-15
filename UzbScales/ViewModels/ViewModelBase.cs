@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace AvaloniaApplication2.ViewModels
+namespace UzbScales.ViewModels
 {
     public class ViewModelBase : ReactiveObject, INotifyPropertyChanged, IScreen
     {

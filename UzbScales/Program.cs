@@ -3,7 +3,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using System;
 
-namespace AvaloniaApplication2
+namespace UzbScales
 {
     internal class Program
     {

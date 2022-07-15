@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using AvaloniaApplication2.ViewModels;
+using UzbScales.ViewModels;
 using System;
 
-namespace AvaloniaApplication2
+namespace UzbScales
 {
     public class ViewLocator : IDataTemplate
     {

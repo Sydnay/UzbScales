@@ -13,18 +13,10 @@ using UzbScales.Views;
 
 namespace UzbScales.ViewModels
 {
-    public class ChoosenReceiptViewModel : ViewModelBase
+    internal class PieceChosenReceiptViewModel : ViewModelBase
     {
         GoodsContext db;
-        #region IRoutableViewModel
-        // Reference to IScreen that owns the routable view model.
-        public IScreen HostScreen { get; }
 
-        // Unique identifier for the routable view model.
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
-        public ChoosenReceiptViewModel(IScreen screen) => HostScreen = screen;
-        #endregion
         public ObservableCollection<Good> SimilarGoods { get; set; }
 
         Good _selectedItem;
@@ -47,18 +39,33 @@ namespace UzbScales.ViewModels
             get => _weight;
             set => Set(ref _weight, value);
         }
-        private int _sumTotal = 0;
+        private int _sumTotal;
         public int SumTotal
         {
             get => _sumTotal;
             set => Set(ref _sumTotal, value);
         }
+        private int _amount = 1;
+        public int Amount
+        {
+            get => _amount;
+            set => Set(ref _amount, value);
+        }
         #region Commands
 
-        public ReactiveCommand<Unit, Unit> AddKiloTEST { get; }
-        void AddKilo()
+        public ReactiveCommand<Unit, Unit> OneMorePiece { get; }
+        void AddPiece()
         {
-            Weight = Weight + 0.5m;
+            Amount++;
+            SumTotal = Amount * Good.Price;
+        }
+        public ReactiveCommand<Unit, Unit> OneLessPiece { get; }
+        void RemovePiece()
+        {
+            if(Amount == 1)
+                return;
+            Amount--;
+            SumTotal = Amount * Good.Price;
         }
 
         public ReactiveCommand<Good, Unit> OpenSimilarGood { get; }
@@ -73,27 +80,28 @@ namespace UzbScales.ViewModels
         public ReactiveCommand<Unit, Unit> PrintSticker { get; }
         void PrintStickerCommand()
         {
-            var dto = new PrintStickerDto
+            var dto = new PiecePrintStickerDto
             {
                 Name = Good.Name,
                 Price = (int)Good.Price,
-                Weight = this.Weight,
-                SumTotal = (int)Weight * Good.Price,
+                Amount = Amount,
+                SumTotal = SumTotal,
                 Barcode = Good.SAP
             };
 
-            var window = new PrintReceipt()
+            var window = new PiecePrintReceipt()
             {
-                DataContext = new PrintReceiptViewModel(dto)
+                DataContext = new PiecePrintReceiptViewModel(dto)
             };
             window.Show();
         }
         #endregion
-        public ChoosenReceiptViewModel(Good choosenGood)
+        public PieceChosenReceiptViewModel(Good choosenGood)
         {
             OpenSimilarGood = ReactiveCommand.Create<Good>(RunTheThing);
             PrintSticker = ReactiveCommand.Create(PrintStickerCommand);
-            AddKiloTEST = ReactiveCommand.Create(AddKilo);
+            OneMorePiece = ReactiveCommand.Create(AddPiece);
+            OneLessPiece = ReactiveCommand.Create(RemovePiece);
 
             db = new GoodsContext();
 
@@ -108,12 +116,11 @@ namespace UzbScales.ViewModels
 
             Good = choosenGood;
 
+            SumTotal = Good.Price;
+
             var collection = new ObservableCollection<Good>(db.Goods.Local.Where(x => x.Id != choosenGood.Id).Take(4));
             SimilarGoods = collection;
         }
-
-
-
 
         private Image Byte64ToImg(byte[] img)
         {

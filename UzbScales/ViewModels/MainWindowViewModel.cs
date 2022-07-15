@@ -1,6 +1,6 @@
 using Avalonia.Media.Imaging;
-using AvaloniaApplication2.Models;
-using AvaloniaApplication2.Views;
+using UzbScales.Models;
+using UzbScales.Views;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -14,8 +14,9 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Windows.Input;
+using UzbScales.Models;
 
-namespace AvaloniaApplication2.ViewModels
+namespace UzbScales.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
@@ -51,17 +52,34 @@ namespace AvaloniaApplication2.ViewModels
             get => _sumTotal;
             set => Set(ref _sumTotal, value);
         }
+        private int _page = 1;
+        public int Page
+        {
+            get => _page;
+            set => Set(ref _page, value);
+        }
         #region Commands
 
         public ReactiveCommand<Good, Unit> NewWindow { get; }
 
         void RunTheThing(Good parameter)
         {
-            var window = new ChoosenReceipt()
+            if(parameter.isWeighable)
             {
-            DataContext = new ChoosenReceiptViewModel(parameter)
-            };
-            window.Show();
+                var window = new ChoosenReceipt()
+                {
+                    DataContext = new ChoosenReceiptViewModel(parameter)
+                };
+                window.Show();
+            }
+            else
+            {
+                var window = new PieceChosenReceipt()
+                {
+                    DataContext = new PieceChosenReceiptViewModel(parameter)
+                };
+                window.Show();
+            }
         }
 
         #endregion
@@ -86,9 +104,6 @@ namespace AvaloniaApplication2.ViewModels
 
             db = new GoodsContext();
 
-            db.Goods.Load();
-
-
             foreach (var good in db.Goods)
             {
                 if (good.isWeighable)
@@ -100,6 +115,8 @@ namespace AvaloniaApplication2.ViewModels
             
             GoodList = db.Goods.Local;
         }
+
+        #region ImgConverter
 
         private byte[] ImgToByte64(string path)
         {
@@ -119,7 +136,7 @@ namespace AvaloniaApplication2.ViewModels
 
         private Image Byte64ToImg(byte[] img)
         {
-           
+
             Image image;
             using (MemoryStream ms = new MemoryStream(img))
             {
@@ -146,5 +163,9 @@ namespace AvaloniaApplication2.ViewModels
             bitmapTmp.Dispose();
             return bitmap1;
         }
+        #endregion
     }
+
+
 }
+

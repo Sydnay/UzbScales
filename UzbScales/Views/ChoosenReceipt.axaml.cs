@@ -3,11 +3,11 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using AvaloniaApplication2.ViewModels;
+using UzbScales.ViewModels;
 using ReactiveUI;
 using System;
 
-namespace AvaloniaApplication2.Views
+namespace UzbScales.Views
 {
     public partial class ChoosenReceipt : ReactiveWindow<ChoosenReceiptViewModel>
     {

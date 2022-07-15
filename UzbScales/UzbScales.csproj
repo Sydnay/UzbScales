@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
@@ -10,6 +10,8 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
     <None Remove=".gitignore" />
+    <None Remove="Assets\PiecePointerChangeAmount.png" />
+    <None Remove="Assets\PiecePointerPrintReceipt.png" />
     <None Remove="Assets\PointerPrintReceipt.png" />
   </ItemGroup>
   <ItemGroup>
@@ -32,13 +34,17 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Update="Views\ChoosenReceipt.axaml.cs">
       <DependentUpon>ChoosenReceipt.axaml</DependentUpon>
     </Compile>
     <Compile Update="Views\PrintReceipt.axaml.cs">
       <DependentUpon>PrintReceipt.axaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\PieceChosenReceipt.axaml.cs">
+      <DependentUpon>PieceChosenReceipt.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Base\" />
   </ItemGroup>
 </Project>

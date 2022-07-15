@@ -6,19 +6,20 @@
 		xmlns:vm="using:UzbScales.ViewModels"
 		
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="UzbScales.Views.PrintReceipt">
+        x:Class="UzbScales.Views.PiecePrintReceipt"
+        Title="PiecePrintReceipt">
 
 	<Design.DataContext>
 		<vm:PrintReceiptViewModel/>
 	</Design.DataContext>
 	<Grid>
 		<StackPanel>
-			<TextBlock Text="{Binding Sticker.Price, StringFormat=Цена/кг: {0}}"/>
-			<TextBlock Text="{Binding Sticker.Weight, StringFormat=Вес/кг: {0}}"/>
+			<TextBlock Text="{Binding Sticker.Price, StringFormat=Цена/шт: {0}}"/>
+			<TextBlock Text="{Binding Sticker.Amount, StringFormat=Количество/шт: {0}}"/>
 			<TextBlock Text="{Binding Sticker.SumTotal, StringFormat=ОБЩАЯ СУММА: {0}}"/>
 			<TextBlock Text="{Binding Sticker.Name, StringFormat=Товар: {0}}"/>
 			<TextBlock Text="{Binding Sticker.Barcode, StringFormat=Штрих-код: {0}}"/>
 		</StackPanel>
 	</Grid>
-	
+
 </Window>

@@ -1,13 +1,13 @@
 ﻿using System.Data.Entity;
 
-namespace AvaloniaApplication2.Models
+namespace UzbScales.Models
 {
 
     public class GoodsContext : DbContext
     {
         public GoodsContext() : base("ScaleConnection")
         {
-            
+            Goods.Load();
         }
         public DbSet<Good> Goods { get; set; }
     }
