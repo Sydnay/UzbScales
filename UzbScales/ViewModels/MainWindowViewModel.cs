@@ -102,7 +102,9 @@ namespace UzbScales.ViewModels
         {
             NewWindow = ReactiveCommand.Create<Good>(RunTheThing);
 
-            db = new GoodsContext();
+            _recieptViewModel = chosenRecieptViewModel;
+            _db = goodsContext;
+            _db.Goods.Load();
 
             foreach (var good in db.Goods)
             {
@@ -112,8 +114,8 @@ namespace UzbScales.ViewModels
                     good.Name += ", רע";
                 good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
             }
-            
-            GoodList = db.Goods.Local;
+
+            GoodList = new ObservableCollection<Good>(_db.Goods.ToList());
         }
 
         #region ImgConverter

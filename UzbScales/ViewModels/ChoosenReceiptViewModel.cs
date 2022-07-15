@@ -15,26 +15,22 @@ namespace UzbScales.ViewModels
 {
     public class ChoosenReceiptViewModel : ViewModelBase
     {
-        GoodsContext db;
-        #region IRoutableViewModel
-        // Reference to IScreen that owns the routable view model.
-        public IScreen HostScreen { get; }
+        public void Setup(Good chosenGood);
+    }
 
-        // Unique identifier for the routable view model.
-        public string UrlPathSegment { get; } = Guid.NewGuid().ToString().Substring(0, 5);
-
-        public ChoosenReceiptViewModel(IScreen screen) => HostScreen = screen;
-        #endregion
+    public class ChosenReceiptViewModel : ViewModelBase, IChosenRecieptViewModel
+    {
         public ObservableCollection<Good> SimilarGoods { get; set; }
 
-        Good _selectedItem;
+        private readonly IGoodsContext _db;
 
         public Good SelectedItem
         {
             get => _selectedItem;
             set => Set(ref _selectedItem, value);
         }
-        Good _good;
+
+        private Good _good;
         public Good Good
         {
             get => _good;
@@ -89,13 +85,15 @@ namespace UzbScales.ViewModels
             window.Show();
         }
         #endregion
-        public ChoosenReceiptViewModel(Good choosenGood)
+
+        public ChosenReceiptViewModel(IGoodsContext goodsContext)
         {
             OpenSimilarGood = ReactiveCommand.Create<Good>(RunTheThing);
             PrintSticker = ReactiveCommand.Create(PrintStickerCommand);
             AddKiloTEST = ReactiveCommand.Create(AddKilo);
 
-            db = new GoodsContext();
+            _db = goodsContext;
+            _db.Goods.Load();
 
             foreach (var good in db.Goods)
             {
@@ -106,14 +104,13 @@ namespace UzbScales.ViewModels
                 good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
             }
 
-            Good = choosenGood;
+        public void Setup(Good chosenGood)
+        {
+            Good = chosenGood;
 
-            var collection = new ObservableCollection<Good>(db.Goods.Local.Where(x => x.Id != choosenGood.Id).Take(4));
+            var collection = new ObservableCollection<Good>(_db.Goods.Local.Where(x => x.Id != chosenGood.Id).Take(4));
             SimilarGoods = collection;
         }
-
-
-
 
         private Image Byte64ToImg(byte[] img)
         {

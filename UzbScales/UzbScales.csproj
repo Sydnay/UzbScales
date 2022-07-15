@@ -31,8 +31,9 @@
     <PackageReference Include="Avalonia.Xaml.Interactions" Version="0.10.16" />
     <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.16" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0-preview.6.22329.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0-preview.6.22329.4" />
+    <PackageReference Include="Splat" Version="14.3.4" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
     <Compile Update="Views\ChoosenReceipt.axaml.cs">
       <DependentUpon>ChoosenReceipt.axaml</DependentUpon>
