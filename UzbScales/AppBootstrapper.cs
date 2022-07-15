@@ -1,15 +1,16 @@
-﻿using AvaloniaApplication2.ViewModels;
+﻿using UzbScales.ViewModels;
 using BL;
 using Splat;
 using System;
+using Avalonia;
 
-namespace AvaloniaApplication2
+namespace UzbScales
 {
     public class AppBootstrapper : IEnableLogger
     {
         public static void Register(IMutableDependencyResolver services, IReadonlyDependencyResolver resolver)
         {
-            services.RegisterConstant(new GoodsContext(), typeof(IGoodsContext));
+            services.RegisterConstant(App.ScalesLocalContext, typeof(IGoodsContext));
 
             services.Register( 
                 () => { return new ChosenReceiptViewModel(resolver.GetRequiredService<IGoodsContext>()); },

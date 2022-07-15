@@ -11,7 +11,6 @@ namespace BL
     {
         public GoodsContext()
         {
-            Goods.Load();
         }
         public DbSet<Good> Goods { get; set; }
 
@@ -19,6 +18,7 @@ namespace BL
         {
             if (!optionsBuilder.IsConfigured)
             {
+                optionsBuilder.UseSqlite("Filename=ScalesLocal.db");
                 //optionsBuilder.UseMs("Data Source=D:\\\\helloapp.db");
             }
         }

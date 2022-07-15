@@ -1,16 +1,16 @@
-﻿using AvaloniaApplication2.Models.DTO;
-using AvaloniaApplication2.Views;
-using BL;
-using ReactiveUI;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reactive;
+using BL;
+using ReactiveUI;
+using UzbScales.Models.DTO;
+using UzbScales.Views;
 
-namespace AvaloniaApplication2.ViewModels
+namespace UzbScales.ViewModels
 {
     public interface IChosenRecieptViewModel
     {

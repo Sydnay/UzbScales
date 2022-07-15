@@ -1,16 +1,27 @@
 using System;
-using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using AvaloniaApplication2.ViewModels;
-using AvaloniaApplication2.Views;
+using UzbScales.ViewModels;
 using Splat;
+using UzbScales.Views;
+using BL;
+using Microsoft.EntityFrameworkCore;
 
-namespace AvaloniaApplication2
+namespace UzbScales
 {
     public partial class App : Application
     {
+        public static readonly IGoodsContext ScalesLocalContext;
+
+        static App()
+        {
+            ScalesLocalContext = new GoodsContext();
+            //необходимо совершать этот вызов до создания моделей/форм/и т.д.
+            ((DbContext)ScalesLocalContext).Database.EnsureCreated();
+            ScalesLocalContext.Goods.Load();
+        }
+
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -30,6 +41,7 @@ namespace AvaloniaApplication2
             var desktop = ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
             desktop.MainWindow = new MainWindow();
             AppBootstrapper.Register(Locator.CurrentMutable, Locator.Current);
+
             desktop.MainWindow.DataContext = Locator.Current.GetRequiredService<IMainWindowViewModel>();
             desktop.MainWindow.Show();
 

@@ -1,13 +1,12 @@
-﻿using ReactiveUI;
-using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reactive;
-using UzbScales.Models;
+using BL;
+using ReactiveUI;
 using UzbScales.Models.DTO;
 using UzbScales.Views;
 
@@ -62,7 +61,7 @@ namespace UzbScales.ViewModels
         public ReactiveCommand<Unit, Unit> OneLessPiece { get; }
         void RemovePiece()
         {
-            if(Amount == 1)
+            if (Amount == 1)
                 return;
             Amount--;
             SumTotal = Amount * Good.Price;
@@ -140,7 +139,7 @@ namespace UzbScales.ViewModels
 
             if (bitmap == null)
                 return null;
-            System.Drawing.Bitmap bitmapTmp = new System.Drawing.Bitmap(bitmap);
+            Bitmap bitmapTmp = new Bitmap(bitmap);
             var bitmapdata = bitmapTmp.LockBits(new Rectangle(0, 0, bitmapTmp.Width, bitmapTmp.Height), ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             Avalonia.Media.Imaging.Bitmap bitmap1 = new Avalonia.Media.Imaging.Bitmap(Avalonia.Platform.PixelFormat.Bgra8888, Avalonia.Platform.AlphaFormat.Premul,
                 bitmapdata.Scan0,

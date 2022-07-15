@@ -1,16 +1,16 @@
-using AvaloniaApplication2.Views;
-using BL;
-using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Entity;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Reactive;
+using BL;
+using Microsoft.EntityFrameworkCore;
+using ReactiveUI;
+using UzbScales.Views;
 
-namespace AvaloniaApplication2.ViewModels
+namespace UzbScales.ViewModels
 {
     public interface IMainWindowViewModel {}
 
@@ -93,7 +93,7 @@ namespace AvaloniaApplication2.ViewModels
                 good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
             }
 
-            GoodList = _db.Goods.Local;
+            GoodList = new ObservableCollection<Good>(_db.Goods);
         }
 
         private byte[] ImgToByte64(string path)
