@@ -48,12 +48,4 @@
       <DependentUpon>PrintReceipt.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <None Update="Base\ScaleImageTestdb.mdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Base\ScaleImageTestdb_log.ldf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>

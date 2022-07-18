@@ -16,10 +16,15 @@ namespace UzbScales
                 () => { return new ChosenReceiptViewModel(resolver.GetRequiredService<IGoodsContext>()); },
                 typeof(IChosenRecieptViewModel));
 
+            services.Register(
+                () => { return new PieceChosenReceiptViewModel(resolver.GetRequiredService<IGoodsContext>()); },
+                typeof(IPieceChosenRecieptViewModel));
+
             services.RegisterConstant(
                 new MainWindowViewModel(
                     resolver.GetRequiredService<IGoodsContext>(),
-                    resolver.GetRequiredService<IChosenRecieptViewModel>()),
+                    resolver.GetRequiredService<IChosenRecieptViewModel>(),
+                    resolver.GetRequiredService<IPieceChosenRecieptViewModel>()),
                 typeof(IMainWindowViewModel));
         }
     }

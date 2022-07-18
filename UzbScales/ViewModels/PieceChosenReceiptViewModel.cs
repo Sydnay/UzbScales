@@ -12,9 +12,13 @@ using UzbScales.Views;
 
 namespace UzbScales.ViewModels
 {
-    internal class PieceChosenReceiptViewModel : ViewModelBase
+    public interface IPieceChosenRecieptViewModel
     {
-        GoodsContext db;
+        public void Setup(Good chosenGood);
+    }
+    internal class PieceChosenReceiptViewModel : ViewModelBase, IPieceChosenRecieptViewModel
+    {
+        IGoodsContext _db;
 
         public ObservableCollection<Good> SimilarGoods { get; set; }
 
@@ -95,29 +99,24 @@ namespace UzbScales.ViewModels
             window.Show();
         }
         #endregion
-        public PieceChosenReceiptViewModel(Good choosenGood)
+        public PieceChosenReceiptViewModel(IGoodsContext goodsContext)
         {
             OpenSimilarGood = ReactiveCommand.Create<Good>(RunTheThing);
             PrintSticker = ReactiveCommand.Create(PrintStickerCommand);
             OneMorePiece = ReactiveCommand.Create(AddPiece);
             OneLessPiece = ReactiveCommand.Create(RemovePiece);
 
-            db = new GoodsContext();
+            _db = goodsContext;
 
-            foreach (var good in db.Goods)
-            {
-                if (good.isWeighable)
-                    good.Name += ", кг";
-                else
-                    good.Name += ", шт";
-                good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
-            }
 
-            Good = choosenGood;
+        }
 
-            SumTotal = Good.Price;
 
-            var collection = new ObservableCollection<Good>(db.Goods.Local.Where(x => x.Id != choosenGood.Id).Take(4));
+        public void Setup(Good chosenGood)
+        {
+            Good = chosenGood;
+
+            var collection = new ObservableCollection<Good>(_db.Goods.Local.Where(x => x.Id != chosenGood.Id).Take(4));
             SimilarGoods = collection;
         }
 

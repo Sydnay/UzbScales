@@ -20,7 +20,8 @@ namespace UzbScales.ViewModels
         public ObservableCollection<Good> GoodList { get; set; }
 
         private readonly IGoodsContext _db;
-        private readonly IChosenRecieptViewModel _recieptViewModel;
+        private readonly IChosenRecieptViewModel _receiptViewModel;
+        private readonly IPieceChosenRecieptViewModel _pieceReceiptViewModel;
 
         private Good _selectedItem;
         public Good SelectedItem
@@ -55,33 +56,30 @@ namespace UzbScales.ViewModels
 
         private void RunTheThing(Good parameter)
         {
-            var window = new ChoosenReceipt();
-            _recieptViewModel.Setup(parameter);
-            window.DataContext = _recieptViewModel;
-            window.Show();
+            if(parameter.isWeighable)
+            {
+                var window = new ChoosenReceipt();
+                _receiptViewModel.Setup(parameter);
+                window.DataContext = _receiptViewModel;
+                window.Show();
+            }
+            else
+            {
+                var window = new PieceChosenReceipt();
+                _pieceReceiptViewModel.Setup(parameter);
+                window.DataContext= _pieceReceiptViewModel;
+                window.Show();
+            }
         }
 
         #endregion
 
-        #region PageNavigation
-        // The Router associated with this Screen.
-        // Required by the IScreen interface.
-        public RoutingState Router { get; } = new RoutingState();
-
-        // The command that navigates a user to first view model.
-        public ReactiveCommand<Unit, IRoutableViewModel> GoNext { get; }
-
-        // The command that navigates a user back.
-        public ReactiveCommand<Unit, Unit> GoBack => Router.NavigateBack;
-
-        public Interaction<ChosenReceiptViewModel, MainWindowViewModel?> ShowDialog { get; }
-
-        #endregion
-        public MainWindowViewModel(IGoodsContext goodsContext, IChosenRecieptViewModel chosenRecieptViewModel)
+        public MainWindowViewModel(IGoodsContext goodsContext, IChosenRecieptViewModel chosenRecieptViewModel, IPieceChosenRecieptViewModel pieceChosenRecieptViewModel)
         {
             NewWindow = ReactiveCommand.Create<Good>(RunTheThing);
 
-            _recieptViewModel = chosenRecieptViewModel;
+            _receiptViewModel = chosenRecieptViewModel;
+            _pieceReceiptViewModel = pieceChosenRecieptViewModel;
             _db = goodsContext;
 
             foreach (var good in _db.Goods)

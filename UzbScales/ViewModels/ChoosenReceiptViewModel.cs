@@ -95,20 +95,20 @@ namespace UzbScales.ViewModels
 
             _db = goodsContext;
 
-            foreach (var good in _db.Goods)
-            {
-                if (good.isWeighable)
-                    good.Name += ", кг";
-                else
-                    good.Name += ", шт";
-                good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
-            }
+            //foreach (var good in _db.Goods)
+            //{
+            //    if (good.isWeighable)
+            //        good.Name += ", кг";
+            //    else
+            //        good.Name += ", шт";
+            //    good.NormalImage = ConvertByte64ToAvaloniaBitmap(good.Image);
+            //}
         }
 
         public void Setup(Good chosenGood)
         {
             Good = chosenGood;
-
+            Weight = 0;
             var collection = new ObservableCollection<Good>(_db.Goods.Local.Where(x => x.Id != chosenGood.Id).Take(4));
             SimilarGoods = collection;
         }
