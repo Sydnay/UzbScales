@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  uzbscales:
+    image: ${DOCKER_REGISTRY-}uzbscales
+    build:
+      context: .
+      dockerfile: UzbScales/Dockerfile
+    environment:
+      #Windows 
+      DISPLAY: "192.168.88.234:0.0"
+      #Linux
+      #DISPLAY: $DISPLAY  
+      LIBGL_ALWAYS_INDIRECT: "1"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ~/.Xauthority:/root/.Xauthority
+    network_mode: "host"

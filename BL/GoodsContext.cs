@@ -18,7 +18,8 @@ namespace BL
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlite($"Filename={Path.Combine("Base", "ScalesLocal.db")}");
+                //optionsBuilder.UseSqlite($"Filename={Path.Combine("Base", "ScalesLocal.db")}");
+                optionsBuilder.UseSqlite($"Filename=ScalesLocal.db");
                 //optionsBuilder.UseMs("Data Source=D:\\\\helloapp.db");
             }
         }
